@@ -43,6 +43,44 @@ apiRoute.post(async (req: NextApiRequest & { files: any }, res: NextApiResponse)
 
 });
 
+apiRoute.put(async (req: NextApiRequest & { files: any }, res: NextApiResponse) => {
+    const { title, description, tags, animationId } = req.body
+    const formatedTags = JSON.parse(tags)
+    console.log('files', req.files, animationId)
+
+    try {
+        const prisRes = req.files.length ? await prisma.animation.update({
+            where: {
+                id: Number(animationId)
+            },
+            data: { description, title, path: req.files[0].filename }
+        }) :
+            await prisma.animation.update({
+                where: {
+                    id: Number(animationId)
+                }, data: { description, title }
+            })
+        if (prisRes) {
+            const arrTag = formatedTags.map((tg: Number) => { return { animationId: prisRes.id, tagId: tg } })
+            const delTag = await prisma.tagOnAnimation.deleteMany({
+                where: {
+                    animationId: Number(animationId)
+                }
+            })
+            if (delTag) {
+                const addTag = await prisma.tagOnAnimation.createMany({ data: arrTag })
+            }
+        }
+
+    } catch (error) {
+        console.log('error', error)
+        return res.status(500).json({ data: 'Something went wrong' });
+
+    }
+    return res.status(201).json({ data: 'Animation created successfully' });
+
+});
+
 apiRoute.delete(async (req: NextApiRequest, res: NextApiResponse) => {
     const { id } = req.query
     try {
