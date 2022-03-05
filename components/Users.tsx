@@ -21,7 +21,7 @@ const Users = () => {
     const users = data?.getUsers
 
     return (
-        <div className='mt-10 mb-10'>
+        <div className='mt-10 mb-10 p-5'>
 
             <div className="flex justify-between items-end mb-7">
                 <h2>All users</h2>
@@ -34,12 +34,21 @@ const Users = () => {
                     <Fragment key={user.id}>
                         <Box pointer onClick={() => router.push(`/users/${user?.id}`)}>
                             <div className="flex space-x-2">
-                                <div className="text-lg font-medium">Name: </div>
-                                <div className="text-lg">{user?.name}</div>
+                                <div className="w-20 h-20 rounded-full bg-red-400 text-center pt-3">
+                                    <p className='text-white text-5xl font-big'>
+                                        {user.name.charAt(0)}
+                                    </p>
+                                </div>
                             </div>
                             <div className="flex space-x-2">
-                                <div className="text-lg font-medium">Email: </div>
-                                <div className="text-lg">{user?.email}</div>
+                                <div className="name text-gray-800 text-2xl font-medium mt-4">
+                                    <p>{user?.name}</p>
+                                </div>
+                            </div>
+                            <div className="flex space-x-2">
+                                <div className="email text-gray-500">
+                                    <p>{user?.email}</p>
+                                </div>
                             </div>
                         </Box>
                     </Fragment>

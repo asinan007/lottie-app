@@ -27,7 +27,8 @@
     "react-multi-select-component": "^4.2.3",
     "redis-om": "^0.2.0",
     "uuid": "^8.3.2",
-    "javascript-time-ago": "^2.3.13"
+    "javascript-time-ago": "^2.3.13",
+    "react-toastify": "^8.2.0"
   },
   "devDependencies": {
     "@types/micro-cors": "^0.1.2",

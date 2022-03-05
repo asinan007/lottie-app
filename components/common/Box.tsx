@@ -8,7 +8,7 @@ interface Props {
 
 const Box = ({ children, onClick, pointer = false }: Props) => {
     return (
-        <div className={`border px-5 py-3 shadow-xl ${pointer ? 'cursor-pointer' : ''}`} onClick={onClick}>
+        <div className={`card bg-white border flex flex-col items-center justify-center p-4 shadow-lg rounded-2xl w-64 ${pointer ? 'cursor-pointer' : ''}`} onClick={onClick}>
             {children}
         </div>
     )
