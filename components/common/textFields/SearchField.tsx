@@ -1,14 +1,4 @@
-import React, { InputHTMLAttributes, useEffect, useState } from 'react'
-import { Player, Controls } from '@lottiefiles/react-lottie-player'
-import TextField from './TextField'
-import { useLazyQuery } from '@apollo/client'
-import { GET_ANIMATIONS_BY_TAG } from '../../../graphql/query/GetAnimationsByTag'
-import Button from '../buttons/Button'
-import { GET_ANIMATIONS } from '../../../graphql/query/GetAnimatons'
-import { useRouter } from 'next/router'
-import Link from 'next/link'
-import en from 'javascript-time-ago/locale/en.json'
-import TimeAgo from 'javascript-time-ago';
+import React, { InputHTMLAttributes } from 'react'
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
     name: string,

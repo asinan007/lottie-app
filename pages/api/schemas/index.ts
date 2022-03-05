@@ -13,7 +13,8 @@ export const typeDefs = gql`
     }
 
     type Mutation {
-    createUser(name: String!, email: String!): User
+    createUser(name: String!, email: String!): User,
+    createTag(name:String!):Tags
     }
 
     type Tags{
@@ -42,8 +43,10 @@ export const typeDefs = gql`
 
     type  Query {
         getAnimations: [Animation]
-        getAnimationsByTag(name: String!): [Animation]
-        getAnimationsByUser(id:ID!):[Animation]
+        getAnimationsByTag(name: String!): [Animation],
+        getAnimationsByTagUser(name: String!,userId:String!): [Animation]
+        getAnimationsByUser(id:ID!):[Animation],
+        
     }
     
     `
