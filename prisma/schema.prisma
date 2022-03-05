@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int         @id @default(autoincrement())
+  name      String
+  email     String      @unique
+  Animation Animation[]
+}
+
+model Tag {
+  id             Int              @id @default(autoincrement())
+  name           String           @unique
+  TagOnAnimation TagOnAnimation[]
+}
+
+model Animation {
+  id             Int              @id @default(autoincrement())
+  title          String           @unique
+  description    String
+  path           String
+  user           User             @relation(fields: [userId], references: [id])
+  userId         Int
+  TagOnAnimation TagOnAnimation[]
+}
+
+model TagOnAnimation {
+  animation   Animation @relation(fields: [animationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  tag         Tag       @relation(fields: [tagId], references: [id])
+  animationId Int
+  tagId       Int
+
+  @@id([animationId, tagId])
+}
