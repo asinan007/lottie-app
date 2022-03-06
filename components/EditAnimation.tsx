@@ -10,6 +10,7 @@ import { useLazyQuery } from '@apollo/client'
 import { GET_TAGS } from '../graphql/query/GetTags'
 import axios from 'axios'
 import { useRouter } from 'next/router';
+import { Player, Controls } from '@lottiefiles/react-lottie-player';
 
 
 interface Props {
@@ -60,6 +61,29 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
             setFile(animation.path);
 
         }
+    }, [animation])
+
+    const [jsonData, setData] = useState([]);
+    const getData = () => {
+        fetch('/uploads/' + animation.path
+            , {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            }
+        )
+            .then(function (response) {
+                console.log('json Response1', response)
+                return response.json();
+            })
+            .then(function (myJson) {
+                console.log('myjson Response1', myJson);
+                setData(myJson)
+            });
+    }
+    useEffect(() => {
+        getData()
     }, [animation])
 
 
@@ -121,9 +145,82 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
                     rows={5}
                     onChange={onChange}
                 />
-                <div {...getRootProps({ className: `w-full h-[5rem] flex items-center justify-center mb-2 rounded-[7px] border-dashed border-2 cursor-pointer  border-[#D9D9D9] hover:border-blue-300` })}>
-                    <input {...getInputProps()} />
-                    <p className="subtitle-clr px-3">Drag 'n' drop file here, or click to select file</p>
+
+                <div className="flex flex-wrap -mx-1 overflow-hidden mt-5">
+                    <div className="my-1 w-1/5 overflow-hidden bg-gray-100">
+                        <div className="text-xs uppercase pb-2 mb-2 font-semibold text-gray-800 p-4">
+                            Lottie Properties
+                        </div>
+                        <div className="flex items-center">
+                            <div className="mr-3 ml-4">
+                                <Player
+                                    autoplay
+                                    loop
+                                    background="white"
+                                    src={`/uploads/${animation.path}`}
+                                    style={{ height: '100px', width: '100px' }}
+                                >
+                                </Player>
+                            </div>
+                            <div className="text-xs">{animation.title}</div>
+                        </div>
+    
+                        <div className="text-xs uppercase pb-2 mb-2 mt-6 font-semibold text-gray-500 p-4">
+                            Layers
+                        </div>
+                        <div id="layers">
+                            {JSON.parse(JSON.stringify(jsonData)).layers?.map((layer: any) => (
+                                <div
+                                    className="flex items-center pl-4 py-2 hover:bg-blue-300 hover:cursor-pointer"
+                                    key={layer.ind}
+                                >
+                                    <div className="mr-3">
+                                        <Player
+                                            autoplay
+                                            loop
+                                            background="gray-50"
+                                            src={{ ...JSON.parse(JSON.stringify(jsonData)), layers: [layer] }}
+                                            style={{ height: '50px', width: '50px' }}
+                                        ></Player>
+                                    </div>
+                                    <div className="text-xs">{layer.nm}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+    
+                    <div className="px-1 w-3/5 overflow-hidden  bg-white">
+                        <div>
+                            <Player
+                                autoplay
+                                loop
+                                background="white"
+                                src={`/uploads/${animation.path}`}
+                                style={{ height: 'screen', width: 'inherit' }}
+                            >
+                                <Controls
+                                    visible={true}
+                                    buttons={['play', 'repeat', 'frame', 'debug']}
+                                />
+                            </Player>
+                        </div>
+                    </div>
+    
+                    <div className="my-1 px-1 w-1/5 overflow-hidden pl-4 pt-2 pr-4 bg-gray-100">
+                        
+                        <div className="flex mb-3 w-full">
+                            <div className="flex items-center justify-center mr-3">
+                                <div className="text-sm">Background</div>
+                            </div>
+                            <div>
+                                <div className="mb-2">
+                                    <div className="flex items-center justify-end">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
                 </div>
 
                 <Button type="submit">Update</Button>

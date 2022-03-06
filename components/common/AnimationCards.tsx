@@ -1,13 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Player, Controls } from '@lottiefiles/react-lottie-player';
-import Button from './buttons/Button';
 import DangerButton from './buttons/DangerButton';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import Link from 'next/link';
+import Modal from './Modal';
+import BigModal from './BigModal';
+import EditAnimation from '../EditAnimation';
 
 const AnimationCards = ({ animations }: any) => {
     const router = useRouter()
+    const [open, setOpen] = useState(false)
+    const [editData, setEditData] = useState()
 
     const deleteAnimaiton = async (id: number) => {
 
@@ -18,6 +22,11 @@ const AnimationCards = ({ animations }: any) => {
             })
             .catch(err => console.log(err))
 
+    }
+
+    const editClick = (animation: any) => {
+        setEditData(animation)
+        setOpen(true)
     }
 
     return (
@@ -42,11 +51,11 @@ const AnimationCards = ({ animations }: any) => {
                                     {animation?.title}
                                 </h2>
                                 {router.asPath !== '/' &&
-                                    <Link href={`/editor/${animation.id}`} passHref>
-                                        <button className="px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500">
-                                            Edit
-                                        </button>
-                                    </Link>
+
+                                    <button onClick={() => editClick(animation)} className="px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500">
+                                        Edit
+                                    </button>
+
                                 }
                             </div>
                             <div className="flex justify-between">
@@ -77,6 +86,10 @@ const AnimationCards = ({ animations }: any) => {
                     </div>
                 </div>
             ))}
+
+            <BigModal open={open} setOpen={setOpen}>
+                <EditAnimation animation={editData} setOpen={() => setOpen(false)} />
+            </BigModal>
         </div>
     )
 }
