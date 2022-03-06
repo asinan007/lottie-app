@@ -147,7 +147,7 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
                 />
 
                 <div className="flex flex-wrap -mx-1 overflow-hidden mt-5">
-                    <div className="my-1 w-1/5 overflow-hidden bg-gray-100">
+                    <div className="my-1 w-2/5 overflow-hidden bg-gray-100">
                         <div className="text-xs uppercase pb-2 mb-2 font-semibold text-gray-800 p-4">
                             Lottie Properties
                         </div>
@@ -158,37 +158,76 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
                                     loop
                                     background="white"
                                     src={`/uploads/${animation.path}`}
-                                    style={{ height: '100px', width: '100px' }}
+                                    style={{ height: '150px', width: '150px' }}
                                 >
                                 </Player>
                             </div>
                             <div className="text-xs">{animation.title}</div>
                         </div>
-    
+
+
+                        <div className="text-xs uppercase pb-2 mb-2 mt-6 font-semibold text-gray-500 p-4">
+                            Dimensions
+                        </div>
+                        <div className="flex mb-3">
+                            <div>
+                                <div className="mb-2">
+                                    <div className="flex items-center justify-end">
+                                        <div className="text-xs">W</div>
+                                        <input
+                                            className="w-2/4 ml-3 bg-gray-200 appearance-none border-2 border-gray-200 rounded py-2 px-4 text-gray-700 focus:outline-none focus:bg-white focus:border-purple-500"
+                                            id="inline-password"
+                                            type="text"
+                                            placeholder=""
+                                            value={JSON.parse(JSON.stringify(jsonData)).w}
+                                        />
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className="flex items-center justify-end">
+                                        <div className="text-xs">H</div>
+                                        <input
+                                            className="w-2/4 ml-3 bg-gray-200 appearance-none border-2 border-gray-200 rounded py-2 px-4 text-gray-700 focus:outline-none focus:bg-white focus:border-purple-500"
+                                            id="inline-password"
+                                            type="text"
+                                            placeholder=""
+                                            value={JSON.parse(JSON.stringify(jsonData)).h}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div className="text-xs uppercase pb-2 mb-2 mt-6 font-semibold text-gray-500 p-4">
                             Layers
                         </div>
                         <div id="layers">
                             {JSON.parse(JSON.stringify(jsonData)).layers?.map((layer: any) => (
-                                <div
-                                    className="flex items-center pl-4 py-2 hover:bg-blue-300 hover:cursor-pointer"
-                                    key={layer.ind}
-                                >
-                                    <div className="mr-3">
-                                        <Player
-                                            autoplay
-                                            loop
-                                            background="gray-50"
-                                            src={{ ...JSON.parse(JSON.stringify(jsonData)), layers: [layer] }}
-                                            style={{ height: '50px', width: '50px' }}
-                                        ></Player>
+                                <div key={layer.ind}>
+                                    <div className="flex items-center pl-4 py-2">
+                                        <div className="mr-3">
+                                            <Player
+                                                autoplay
+                                                loop
+                                                background="gray-50"
+                                                src={{ ...JSON.parse(JSON.stringify(jsonData)), layers: [layer] }}
+                                                style={{ height: '100px', width: '100px' }}
+                                            ></Player>
+                                        </div>
+                                        <div className="text-xs">{layer.nm}</div>
                                     </div>
-                                    <div className="text-xs">{layer.nm}</div>
+                                    <div className='pl-20'>
+                                        {layer.shapes.map((shape: any) => (
+                                            <div className=' hover:bg-blue-300 hover:cursor-pointer'>
+                                                {shape?.nm}
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             ))}
                         </div>
                     </div>
-    
+
                     <div className="px-1 w-3/5 overflow-hidden  bg-white">
                         <div>
                             <Player
@@ -205,22 +244,7 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
                             </Player>
                         </div>
                     </div>
-    
-                    <div className="my-1 px-1 w-1/5 overflow-hidden pl-4 pt-2 pr-4 bg-gray-100">
-                        
-                        <div className="flex mb-3 w-full">
-                            <div className="flex items-center justify-center mr-3">
-                                <div className="text-sm">Background</div>
-                            </div>
-                            <div>
-                                <div className="mb-2">
-                                    <div className="flex items-center justify-end">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-    
+
                 </div>
 
                 <Button type="submit">Update</Button>
