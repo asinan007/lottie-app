@@ -47,7 +47,7 @@ const ShowAnimations = () => {
     console.log('animations', animations.length, animations);
 
     return (
-        <div className='mb-20'>
+        <div>
             <div className="flex justify-between items-end mb-7">
                 <SearchField label='Search by tag' name="search" onChange={(e) => setSearch(e.target.value)} />
             </div>

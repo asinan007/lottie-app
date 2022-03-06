@@ -14,7 +14,7 @@ const Index: NextPage = () => {
             </Head>
             <Navbar />
             <div className="w-full flex flex-col sm:flex-row flex-grow overflow-hidden">
-                <main role="main" className="w-full h-full flex-grow overflow-auto">
+                <main role="main" className="w-full h-full flex-grow overflow-auto mt-5 mb-5 p-5">
                     <h1 className='text-center text-red-600 mt-5'>About This Assesment</h1>
                     <div className='mt-10 mb-10'>
                         <p>

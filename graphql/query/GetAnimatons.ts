@@ -5,7 +5,8 @@ export const GET_ANIMATIONS = gql`
     getAnimations {
       id
       user{
-      name
+        id
+        name
       }
       title
       path

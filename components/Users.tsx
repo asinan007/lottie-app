@@ -21,7 +21,7 @@ const Users = () => {
     const users = data?.getUsers
 
     return (
-        <div className='mt-10 mb-10 p-5'>
+        <div>
 
             <div className="flex justify-between items-end mb-7">
                 <h2>All users</h2>

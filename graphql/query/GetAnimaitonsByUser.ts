@@ -5,7 +5,8 @@ export const GET_ANIMATIONS_BY_USER = gql`
     getAnimationsByUser(id:$id) {
         id
       user{
-      name
+        id
+        name
       }
       title
       path

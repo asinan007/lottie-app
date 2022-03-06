@@ -30,7 +30,7 @@ const AnimationCards = ({ animations }: any) => {
                         src={`/uploads/${animation?.path}`}
                         style={{ height: '200px', width: '200px' }}
                     >
-                        <Controls visible={true} buttons={['play', 'repeat', 'frame', 'debug']} />
+                        <Controls visible={false} buttons={['play', 'repeat', 'frame', 'debug']} />
                     </Player>
                     <div className="bg-gray-50 rounded-br rounded-bl">
                         <div className='p-4'>
@@ -50,9 +50,11 @@ const AnimationCards = ({ animations }: any) => {
                                 }
                             </div>
                             <div className="flex justify-between">
-                                <p className='text-xs'>{animation?.user?.name}</p>
+                                <p className='text-xs'>
+                                    <a href={`/users/${animation?.user?.id}`}>{animation?.user?.name}</a>
+                                </p>
                             </div>
-                            <div className="flex justify-between">
+                            <div className="flex justify-between mt-5">
                                 <p className='text-sm'>{animation?.description}</p>
                             </div>
                             <div className="flex mt-4">

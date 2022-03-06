@@ -50,6 +50,39 @@ export const resolvers = {
                     }
                 }
             }
+        }),
+        getAnimationsByTagUser: async (_: any, args: { name: string, userId: string }) => await prisma.animation.findMany({
+            where: {
+                userId: Number(args.userId),
+                TagOnAnimation: {
+                    some: {
+                        tag: {
+                            name: args.name
+                        }
+                    }
+                }
+            },
+            include: {
+                user: true,
+                TagOnAnimation: {
+                    include: {
+                        tag: true
+                    }
+                }
+            }
+        }),
+        getAnimation: async (_: any, args: { id: string }) => await prisma.animation.findFirst({
+            where: {
+                id: Number(args.id)
+            },
+            include: {
+                user: true,
+                TagOnAnimation: {
+                    include: {
+                        tag: true
+                    }
+                }
+            }
         })
     },
     Mutation: {
@@ -66,6 +99,20 @@ export const resolvers = {
 
                     }
                 }
+                throw error
+            }
+        },
+        createTag: async (_: any, args: { name: string }) => {
+            try {
+                const res = await prisma.tag.create({ data: { ...args } })
+                if (res) return res
+            } catch (error: any) {
+
+                if (error.code === 'P2002') {
+                    throw 'Tag already exist'
+
+                }
+
                 throw error
             }
         },

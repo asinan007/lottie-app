@@ -14,7 +14,7 @@ const Index: NextPage = () => {
             </Head>
             <Navbar />
             <div className="w-full flex flex-col sm:flex-row flex-grow overflow-hidden">
-                <main role="main" className="w-full h-full flex-grow overflow-auto">
+                <main role="main" className="w-full h-full flex-grow overflow-auto mt-5 mb-5 p-5">
                     
                     <UserAnimations />
                 </main>

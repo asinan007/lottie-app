@@ -6,10 +6,11 @@ import { useDropzone } from 'react-dropzone';
 import TextField from './common/textFields/TextField'
 import { MultiSelect } from "react-multi-select-component";
 import { GET_USERS } from '../graphql/query/GetUsers'
-import { useLazyQuery } from '@apollo/client'
+import { useLazyQuery, useMutation } from '@apollo/client'
 import { GET_TAGS } from '../graphql/query/GetTags'
 import axios from 'axios'
 import { useRouter } from 'next/router';
+import { CREATETAG } from '../graphql/mutation/CreateTag';
 
 interface Props {
     setOpen: () => void,
@@ -19,6 +20,7 @@ interface Props {
 const AddAnimation = ({ setOpen, refetch }: Props) => {
     const [getUsers, { data: queryData, loading: queryLoading }] = useLazyQuery(GET_USERS)
     const [getTags, { data: tagsData, loading: tagsLoading }] = useLazyQuery(GET_TAGS)
+    const [createTag, { data }] = useMutation(CREATETAG)
     const [tags, setTags] = useState([]);
     const [tagOptions, setTagOptions] = useState([])
     const { acceptedFiles, getRootProps, getInputProps } = useDropzone({ multiple: false, accept: '.json', maxFiles: 1 });
@@ -77,6 +79,14 @@ const AddAnimation = ({ setOpen, refetch }: Props) => {
 
     }
 
+    const onCreateTag = async (value: any) => {
+        const res = await createTag({ variables: { name: value } })
+        return {
+            label: res?.data?.createTag?.name,
+            value: res?.data?.createTag?.id
+        }
+    }
+
     return (
         <div>
             <h2 className='mb-10'>Add Lottie</h2>
@@ -90,6 +100,8 @@ const AddAnimation = ({ setOpen, refetch }: Props) => {
                         value={tags}
                         onChange={setTags}
                         labelledBy={"Tags"}
+                        isCreatable={true}
+                        onCreateOption={onCreateTag}
                     />
                 </div>
                 <TextField
