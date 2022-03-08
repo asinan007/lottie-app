@@ -32,7 +32,8 @@ const AnimationCards = ({ animations }: any) => {
     return (
         <div className='grid grid-cols-4 gap-3 ml-5'>
             {animations?.map((animation: any) => (
-                <div key={animation?.id} className="border shadow-xl min-h-[300px] px-5 py-3 rounded">
+                <div key={animation.id} className="border shadow-xl min-h-[300px] px-5 py-3 rounded-md">
+                    <div className='rounded-md mb-5' style={{ background: animation.background ?? 'none' }}>
                     <Player
                         autoplay
                         loop
@@ -41,7 +42,8 @@ const AnimationCards = ({ animations }: any) => {
                     >
                         <Controls visible={false} buttons={['play', 'repeat', 'frame', 'debug']} />
                     </Player>
-                    <div className="bg-gray-50 rounded-br rounded-bl">
+                    </div>
+                    <div className="bg-gray-50 rounded-md rounded-bl">
                         <div className='p-4'>
                             <div className="flex justify-between">
                                 <h2

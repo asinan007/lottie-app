@@ -36,8 +36,8 @@ export const typeDefs = gql`
         title: String!,
         description:String!,
         path:String!,
-        TagOnAnimation:[TagOnAnimation]
-        
+        TagOnAnimation:[TagOnAnimation],
+        background:String
     }
 
 

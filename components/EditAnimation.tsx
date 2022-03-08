@@ -11,7 +11,7 @@ import { GET_TAGS } from '../graphql/query/GetTags'
 import axios from 'axios'
 import { useRouter } from 'next/router';
 import { Player, Controls } from '@lottiefiles/react-lottie-player';
-
+import ColorPicker from './common/ColorPicker'
 
 interface Props {
     setOpen: () => void,
@@ -31,11 +31,17 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
     const [state, setState] = useState({
         title: '',
         description: '',
+        background: '',
     })
 
     const onChange = (e: ChangeEvent<HTMLInputElement & HTMLSelectElement>) => {
         const { name, value } = e.target
         setState({ ...state, [name]: value })
+    }
+
+    const handleBGColorInput = (el:any) => {
+        setState({ ...state, background: el.target.value })
+        console.log(el.target.value, state);
     }
 
     useEffect(() => {
@@ -56,7 +62,8 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
             setTags(tgOptions)
             setState({
                 description: animation.description,
-                title: animation.title
+                title: animation.title,
+                background: animation.background
             })
             setFile(animation.path);
 
@@ -98,6 +105,7 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
             formData.append("file", acceptedFiles[0])
         formData.append("title", state.title)
         formData.append("description", state.description)
+        formData.append("background", state.background)
         formData.append("animationId", animation.id)
         formData.append("tags", JSON.stringify(formatedTags))
 
@@ -112,7 +120,6 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
 
             })
             .catch(err => console.log(err))
-
     }
 
     return (
@@ -137,10 +144,19 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
                     value={state.title}
                     onChange={onChange}
                 />
+
+                <label className="block text-sm font-medium text-gray-700">
+                    Background
+                </label>
+                <ColorPicker 
+                    value={state.background}
+                    name='background'
+                    onChange={handleBGColorInput}
+                />
                 <TextField
                     label="Description"
                     name="description"
-                    multiline={true}
+                    multiline={false}
                     value={state.description}
                     rows={5}
                     onChange={onChange}
@@ -148,23 +164,16 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
 
                 <div className="flex flex-wrap -mx-1 overflow-hidden mt-5">
                     <div className="my-1 w-2/5 overflow-hidden bg-gray-100">
-                        <div className="text-xs uppercase pb-2 mb-2 font-semibold text-gray-800 p-4">
-                            Lottie Properties
-                        </div>
-                        <div className="flex items-center">
-                            <div className="mr-3 ml-4">
-                                <Player
-                                    autoplay
-                                    loop
-                                    background="white"
-                                    src={`/uploads/${animation.path}`}
-                                    style={{ height: '150px', width: '150px' }}
-                                >
-                                </Player>
-                            </div>
-                            <div className="text-xs">{animation.title}</div>
-                        </div>
 
+                        <div className="text-xs uppercase pb-2 mb-2 mt-6 font-semibold text-gray-500 p-4">
+                            Background
+                        </div>
+                        <div>
+                            <div className="mb-2">
+                                <div className="flex items-center justify-end">
+                                </div>
+                            </div>
+                        </div>
 
                         <div className="text-xs uppercase pb-2 mb-2 mt-6 font-semibold text-gray-500 p-4">
                             Dimensions
@@ -209,15 +218,15 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
                                             <Player
                                                 autoplay
                                                 loop
-                                                background="gray-50"
+                                                background="white"
                                                 src={{ ...JSON.parse(JSON.stringify(jsonData)), layers: [layer] }}
-                                                style={{ height: '100px', width: '100px' }}
+                                                style={{ height: '150px', width: '150px' }}
                                             ></Player>
                                         </div>
                                         <div className="text-xs">{layer.nm}</div>
                                     </div>
                                     <div className='pl-20'>
-                                        {layer.shapes.map((shape: any) => (
+                                        {layer.shapes?.map((shape: any) => (
                                             <div className=' hover:bg-blue-300 hover:cursor-pointer'>
                                                 {shape?.nm}
                                             </div>
@@ -228,19 +237,14 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
                         </div>
                     </div>
 
-                    <div className="px-1 w-3/5 overflow-hidden  bg-white">
-                        <div>
+                    <div className="px-1 w-3/5 overflow-hidden">
+                        <div className="w-full" style={{ background: state.background ?? 'none' }}>
                             <Player
                                 autoplay
                                 loop
-                                background="white"
                                 src={`/uploads/${animation.path}`}
                                 style={{ height: 'screen', width: 'inherit' }}
                             >
-                                <Controls
-                                    visible={true}
-                                    buttons={['play', 'repeat', 'frame', 'debug']}
-                                />
                             </Player>
                         </div>
                     </div>

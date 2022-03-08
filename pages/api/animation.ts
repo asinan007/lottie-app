@@ -44,7 +44,7 @@ apiRoute.post(async (req: NextApiRequest & { files: any }, res: NextApiResponse)
 });
 
 apiRoute.put(async (req: NextApiRequest & { files: any }, res: NextApiResponse) => {
-    const { title, description, tags, animationId } = req.body
+    const { title, description, tags, animationId, background } = req.body
     const formatedTags = JSON.parse(tags)
     console.log('files', req.files, animationId)
 
@@ -53,12 +53,12 @@ apiRoute.put(async (req: NextApiRequest & { files: any }, res: NextApiResponse) 
             where: {
                 id: Number(animationId)
             },
-            data: { description, title, path: req.files[0].filename }
+            data: { description, title, background, path: req.files[0].filename }
         }) :
             await prisma.animation.update({
                 where: {
                     id: Number(animationId)
-                }, data: { description, title }
+                }, data: { description, title, background }
             })
         if (prisRes) {
             const arrTag = formatedTags.map((tg: Number) => { return { animationId: prisRes.id, tagId: tg } })
@@ -77,7 +77,7 @@ apiRoute.put(async (req: NextApiRequest & { files: any }, res: NextApiResponse) 
         return res.status(500).json({ data: 'Something went wrong' });
 
     }
-    return res.status(201).json({ data: 'Animation created successfully' });
+    return res.status(201).json({ data: 'Animation updated successfully' });
 
 });
 

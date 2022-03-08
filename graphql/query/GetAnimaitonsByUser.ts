@@ -11,6 +11,7 @@ export const GET_ANIMATIONS_BY_USER = gql`
       title
       path
       description
+      background
       TagOnAnimation{
       tag{
       id

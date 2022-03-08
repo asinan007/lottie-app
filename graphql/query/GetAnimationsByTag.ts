@@ -10,6 +10,7 @@ export const GET_ANIMATIONS_BY_TAG = gql`
       title
       path
       description
+      background
       TagOnAnimation{
       tag{
       id
