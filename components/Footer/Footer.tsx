@@ -9,7 +9,9 @@ export default function Footer() {
                 <div className="px-4 py-3 text-white mx-auto">
                     <p className='text-center text-sm'>Lottie Assesment 2022</p>
                     <div className="text-center text-xs py-2">
-                        <a href="\">&copy;2022 Sinan</a>
+                        <Link href={`/`}>
+                            <a>&copy;2022 Sinan</a>
+                        </Link>
                     </div>
                 </div>
             </footer>

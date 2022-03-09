@@ -32,16 +32,16 @@ const AnimationCards = ({ animations }: any) => {
     return (
         <div className='grid grid-cols-4 gap-3 ml-5'>
             {animations?.map((animation: any) => (
-                <div key={animation.id+animation.path} className="border shadow-xl min-h-[300px] px-5 py-3 rounded-md">
+                <div key={animation.id + animation.path} className="border shadow-xl min-h-[300px] px-5 py-3 rounded-md">
                     <div className='rounded-md mb-5' style={{ background: animation.background ?? 'none' }}>
-                    <Player
-                        autoplay
-                        loop
-                        src={`/uploads/${animation?.path}`}
-                        style={{ height: '200px', width: '200px' }}
-                    >
-                        <Controls visible={false} buttons={['play', 'repeat', 'frame', 'debug']} />
-                    </Player>
+                        <Player
+                            autoplay
+                            loop
+                            src={`/uploads/${animation?.path}`}
+                            style={{ height: '200px', width: '200px' }}
+                        >
+                            <Controls visible={false} buttons={['play', 'repeat', 'frame', 'debug']} />
+                        </Player>
                     </div>
                     <div className="bg-gray-50 rounded-md rounded-bl">
                         <div className='p-4'>
@@ -62,7 +62,9 @@ const AnimationCards = ({ animations }: any) => {
                             </div>
                             <div className="flex justify-between">
                                 <p className='text-xs'>
-                                    <a href={`/users/${animation?.user?.id}`}>{animation?.user?.name}</a>
+                                    <Link href={`/users/${animation?.user?.id}`}>
+                                        <a>{animation?.user?.name}</a>
+                                    </Link>
                                 </p>
                             </div>
                             <div className="flex justify-between mt-5">
