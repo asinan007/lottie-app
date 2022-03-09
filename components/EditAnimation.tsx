@@ -11,7 +11,8 @@ import { GET_TAGS } from '../graphql/query/GetTags'
 import axios from 'axios'
 import { useRouter } from 'next/router';
 import { Player, Controls } from '@lottiefiles/react-lottie-player';
-import ColorPicker from './common/ColorPicker'
+import ColorPicker from './common/ColorPicker';
+// import {writeJsonFile} from 'write-json-file';
 
 interface Props {
     setOpen: () => void,
@@ -28,24 +29,19 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
     const router = useRouter()
     const id = router?.query?.id
 
-    const [state, setState] = useState({
-        title: '',
-        description: '',
-        background: '',
-    })
+    const [state, setState] = useState({} as any)
 
     const onChange = (e: ChangeEvent<HTMLInputElement & HTMLSelectElement>) => {
         const { name, value } = e.target
         setState({ ...state, [name]: value })
     }
 
-    const handleBGColorInput = (el:any) => {
+    const handleBGColorInput = (el: any) => {
+        console.log(el.target.value);
         setState({ ...state, background: el.target.value })
-        console.log(el.target.value, state);
     }
 
     useEffect(() => {
-
         getTags()
         getUsers()
     }, [])
@@ -55,20 +51,6 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
             setTagOptions(tagsData?.getTags?.map((tag: any) => { return { label: tag.name, value: tag.id } }))
         }
     }, [tagsData?.getTags])
-
-    useEffect(() => {
-        if (animation) {
-            const tgOptions = animation.TagOnAnimation.map((tg: any) => { return { label: tg.tag.name, value: tg.tag.id } })
-            setTags(tgOptions)
-            setState({
-                description: animation.description,
-                title: animation.title,
-                background: animation.background
-            })
-            setFile(animation.path);
-
-        }
-    }, [animation])
 
     const [jsonData, setData] = useState([]);
     const getData = () => {
@@ -93,12 +75,42 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
         getData()
     }, [animation])
 
+    const handleLayerColorInput = (shapeElement: any, newValue: any) => {
+        const rgbtohex = RGBToHex(
+            Math.floor(shapeElement?.c?.k[0] * 255),
+            Math.floor(shapeElement?.c?.k[1] * 255),
+            Math.floor(shapeElement?.c?.k[2] * 255)
+        );
+        if (newValue) {
+            return newValue;
+        }
+        return rgbtohex;
+    }
+
+    useEffect(() => {
+        if (animation) {
+            const tgOptions = animation.TagOnAnimation.map((tg: any) => { return { label: tg.tag.name, value: tg.tag.id } })
+            setTags(tgOptions)
+            setState({
+                description: animation.description,
+                title: animation.title,
+                background: animation.background ?? '#FFFFFF',
+                path: JSON.parse(JSON.stringify(jsonData))
+            })
+            setFile(animation.path);
+        }
+    }, [animation, jsonData])
+
+    console.log('state.path', state.path);
+
 
     const onSubmit = async (e: SyntheticEvent) => {
         e.preventDefault()
         if (!tags.length || (!acceptedFiles.length && !file)) return alert("Tags or file are required")
 
         const formatedTags = tags.map((tg: any) => Number(tg.value))
+
+        // await writeJsonFile('/uploads/' + animation.path, state.path);
 
         const formData = new FormData()
         if (acceptedFiles.length)
@@ -107,11 +119,12 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
         formData.append("description", state.description)
         formData.append("background", state.background)
         formData.append("animationId", animation.id)
+        formData.append("jsonData", JSON.stringify(state.path))
+        formData.append("file", animation.path)
         formData.append("tags", JSON.stringify(formatedTags))
 
         axios.put("/api/animation", formData)
             .then(res => {
-                console.log('res', res.data)
                 setTimeout(() => {
                     window.location.reload()
                 }, 300)
@@ -120,6 +133,26 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
 
             })
             .catch(err => console.log(err))
+    }
+
+    const componentToHex = (color: any) => {
+        const hexadecimal = color.toString(16)
+        return hexadecimal.length == 1 ? '0' + hexadecimal : hexadecimal
+    }
+
+    const RGBToHex = (r, g, b) => {
+        return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b)
+    }
+
+    const hexToRGB = (c: any) => {
+        if (/^#([a-f0-9]{3}){1,2}$/.test(c)) {
+            if (c.length == 4) {
+                c = '#' + [c[1], c[1], c[2], c[2], c[3], c[3]].join('')
+            }
+            c = '0x' + c.substring(1)
+            return [((c >> 16) & 255) / 255, ((c >> 8) & 255) / 255, (c & 255) / 255]
+        }
+        return ''
     }
 
     return (
@@ -148,7 +181,7 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
                 <label className="block text-sm font-medium text-gray-700">
                     Background
                 </label>
-                <ColorPicker 
+                <ColorPicker
                     value={state.background}
                     name='background'
                     onChange={handleBGColorInput}
@@ -188,7 +221,7 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
                                             id="inline-password"
                                             type="text"
                                             placeholder=""
-                                            value={JSON.parse(JSON.stringify(jsonData)).w}
+                                            value={state.path?.w}
                                         />
                                     </div>
                                 </div>
@@ -200,49 +233,159 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
                                             id="inline-password"
                                             type="text"
                                             placeholder=""
-                                            value={JSON.parse(JSON.stringify(jsonData)).h}
+                                            value={state.path?.h}
                                         />
                                     </div>
                                 </div>
                             </div>
                         </div>
 
+                        {/* <div className="text-xs uppercase pb-2 mb-2 mt-6 font-semibold text-gray-500 p-4">
+                            Assets
+                        </div>
+                        <div id='assets ml-5'>
+                            {state.path?.assets?.map(
+                                (
+                                    asset: {
+                                        layers: any[]
+                                    },
+                                    assetIndex: number
+                                ) =>
+                                asset.layers?.map(
+                                    (
+                                        layer: {
+                                            shapes: { it: any[] }[],
+                                            nm: any,
+                                        }, layerIndex: number
+                                    ) =>
+                                    layer.shapes?.map((shape: { it: any[] }, shapeIndex: number) =>
+                                        shape.it?.map(
+                                            (shapeElement, shapeElementIndex) =>
+                                                shapeElement?.c?.k && (
+                                                    <div
+                                                        key={JSON.stringify(shapeElement)}
+                                                        className="flex flex-inline mt-2 ml-2"
+                                                    >
+                                                        <ColorPicker
+                                                            value={handleLayerColorInput(shapeElement, null)}
+                                                            name={JSON.stringify(shapeElement)}
+                                                            onChange={(el: any) => {
+                                                                const value = el.target.value;
+                                                                handleLayerColorInput(shapeElement, value);
+                                                                console.log('color value', value);
+                                                                const currentColor = hexToRGB(value)
+                                                                const currentKData = [...shapeElement.c.k]
+                                                                currentKData[0] = currentColor[0]
+                                                                currentKData[1] = currentColor[1]
+                                                                currentKData[2] = currentColor[2]
+
+                                                                const it = [...shape.it]
+
+                                                                it[shapeElementIndex] = {
+                                                                    ...shapeElement,
+                                                                    c: {
+                                                                        ...shapeElement.c,
+                                                                        k: currentKData,
+                                                                    },
+                                                                }
+
+                                                                const shapes = [...layer.shapes]
+                                                                shapes[shapeIndex] = { ...shape, it }
+
+                                                                const layers = [...state.path.layers]
+                                                                layers[layerIndex] = { ...layer, shapes }
+
+                                                                const assets = [...state.path.assets]
+                                                                assets[assetIndex] = { ...asset, layers }
+
+                                                                const updatedAsset = {
+                                                                    ...state,
+                                                                    path: { ...state.path, assets: assets },
+                                                                }
+
+                                                                setState(updatedAsset)
+                                                            }}
+                                                        />
+                                                        <div className="text-xs ml-3 mt-1">{layer.nm}</div>
+                                                    </div>
+                                                )
+                                        )
+                                    )
+                                )
+                            )}
+                        </div> */}
+
                         <div className="text-xs uppercase pb-2 mb-2 mt-6 font-semibold text-gray-500 p-4">
                             Layers
                         </div>
-                        <div id="layers">
-                            {JSON.parse(JSON.stringify(jsonData)).layers?.map((layer: any) => (
-                                <div key={layer.ind}>
-                                    <div className="flex items-center pl-4 py-2">
-                                        <div className="mr-3">
-                                            <Player
-                                                autoplay
-                                                loop
-                                                background="white"
-                                                src={{ ...JSON.parse(JSON.stringify(jsonData)), layers: [layer] }}
-                                                style={{ height: '150px', width: '150px' }}
-                                            ></Player>
-                                        </div>
-                                        <div className="text-xs">{layer.nm}</div>
-                                    </div>
-                                    <div className='pl-20'>
-                                        {layer.shapes?.map((shape: any) => (
-                                            <div className=' hover:bg-blue-300 hover:cursor-pointer'>
-                                                {shape?.nm}
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            ))}
+                        <div id="layers ml-5">
+                            {state.path?.layers?.map(
+                                (
+                                    layer: {
+                                        shapes: { it: any[] }[],
+                                        nm: any,
+                                    }, layerIndex: number
+                                ) =>
+                                    layer.shapes?.map((shape: { it: any[] }, shapeIndex: number) =>
+                                        shape.it?.map(
+                                            (shapeElement, shapeElementIndex) =>
+                                                shapeElement?.c?.k && (
+                                                    <div
+                                                        key={JSON.stringify(shapeElement)}
+                                                        className="flex flex-inline mt-2 ml-2"
+                                                    >
+                                                        <ColorPicker
+                                                            value={handleLayerColorInput(shapeElement, null)}
+                                                            name={JSON.stringify(shapeElement)}
+                                                            onChange={(el: any) => {
+                                                                const value = el.target.value;
+                                                                handleLayerColorInput(shapeElement, value);
+                                                                console.log('color value', value);
+                                                                const currentColor = hexToRGB(value)
+                                                                const currentKData = [...shapeElement.c.k]
+                                                                currentKData[0] = currentColor[0]
+                                                                currentKData[1] = currentColor[1]
+                                                                currentKData[2] = currentColor[2]
+
+                                                                const it = [...shape.it]
+
+                                                                it[shapeElementIndex] = {
+                                                                    ...shapeElement,
+                                                                    c: {
+                                                                        ...shapeElement.c,
+                                                                        k: currentKData,
+                                                                    },
+                                                                }
+
+                                                                const shapes = [...layer.shapes]
+                                                                shapes[shapeIndex] = { ...shape, it }
+
+                                                                const layers = [...state.path.layers]
+                                                                layers[layerIndex] = { ...layer, shapes }
+
+                                                                const updatedLayer = {
+                                                                    ...state,
+                                                                    path: { ...state.path, layers: layers },
+                                                                }
+
+                                                                setState(updatedLayer)
+                                                            }}
+                                                        />
+                                                        <div className="text-xs ml-3 mt-1">{layer.nm}</div>
+                                                    </div>
+                                                )
+                                        )
+                                    )
+                            )}
                         </div>
                     </div>
 
                     <div className="px-1 w-3/5 overflow-hidden">
-                        <div className="w-full" style={{ background: state.background ?? 'none' }}>
+                        <div className="w-full mt-1" style={{ background: state.background ?? 'none' }}>
                             <Player
                                 autoplay
                                 loop
-                                src={`/uploads/${animation.path}`}
+                                src={state.path}
                                 style={{ height: 'screen', width: 'inherit' }}
                             >
                             </Player>

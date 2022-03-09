@@ -44,8 +44,10 @@ apiRoute.post(async (req: NextApiRequest & { files: any }, res: NextApiResponse)
 });
 
 apiRoute.put(async (req: NextApiRequest & { files: any }, res: NextApiResponse) => {
-    const { title, description, tags, animationId, background } = req.body
+    const { title, description, tags, animationId, background, jsonData, file } = req.body
     const formatedTags = JSON.parse(tags)
+    const jsonFileData = jsonData
+    const fileName = file
     console.log('files', req.files, animationId)
 
     try {
@@ -70,6 +72,10 @@ apiRoute.put(async (req: NextApiRequest & { files: any }, res: NextApiResponse) 
             if (delTag) {
                 const addTag = await prisma.tagOnAnimation.createMany({ data: arrTag })
             }
+
+            fs.writeFile(`./public/uploads/${fileName}`, jsonFileData, err => {
+                if (err) console.log(err)
+            })
         }
 
     } catch (error) {

@@ -73,7 +73,7 @@ const AnimationCards = ({ animations }: any) => {
                                     <div>
                                         <p
                                             tabIndex={0}
-                                            className="mr-1 focus:outline-none text-xs border border-blue rounded py-1 px-3 bg-blue-600 text-white"
+                                            className="text-sm font-sans font-semibold border border-blue rounded-full py-1 px-3 bg-blue-600 text-white"
                                         >
                                             {tag.tag.name}
                                         </p>
