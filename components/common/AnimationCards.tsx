@@ -32,7 +32,7 @@ const AnimationCards = ({ animations }: any) => {
     return (
         <div className='grid grid-cols-4 gap-3 ml-5'>
             {animations?.map((animation: any) => (
-                <div key={animation.id} className="border shadow-xl min-h-[300px] px-5 py-3 rounded-md">
+                <div key={animation.id+animation.path} className="border shadow-xl min-h-[300px] px-5 py-3 rounded-md">
                     <div className='rounded-md mb-5' style={{ background: animation.background ?? 'none' }}>
                     <Player
                         autoplay

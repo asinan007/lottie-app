@@ -257,7 +257,7 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
                                                 (shapeElement, shapeElementIndex) =>
                                                     shapeElement?.c?.k && (
                                                         <div
-                                                            key={JSON.stringify(shapeElement)}
+                                                            key={JSON.stringify(shapeElement)+shapeIndex}
                                                             className="flex flex-inline mt-2 ml-2"
                                                         >
                                                             <ColorPicker
@@ -324,7 +324,7 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
                                             (shapeElement, shapeElementIndex) =>
                                                 shapeElement?.c?.k && (
                                                     <div
-                                                        key={JSON.stringify(shapeElement)}
+                                                        key={JSON.stringify(shapeElement)+shapeIndex}
                                                         className="flex flex-inline mt-2 ml-2"
                                                     >
                                                         <ColorPicker
