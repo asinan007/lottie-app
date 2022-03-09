@@ -31,8 +31,8 @@ const AnimationCards = ({ animations }: any) => {
 
     return (
         <div className='grid grid-cols-4 gap-3 ml-5'>
-            {animations?.map((animation: any) => (
-                <div key={animation.id + animation.path} className="border shadow-xl min-h-[300px] px-5 py-3 rounded-md">
+            {animations?.map((animation: any, index:number) => (
+                <div key={'anim'+animation.id + animation.path+index} className="border shadow-xl min-h-[300px] px-5 py-3 rounded-md">
                     <div className='rounded-md mb-5' style={{ background: animation.background ?? 'none' }}>
                         <Player
                             autoplay
@@ -71,8 +71,8 @@ const AnimationCards = ({ animations }: any) => {
                                 <p className='text-sm'>{animation?.description}</p>
                             </div>
                             <div className="flex mt-4">
-                                {animation?.TagOnAnimation?.map((tag: any) => (
-                                    <div>
+                                {animation?.TagOnAnimation?.map((tag: any, tagIndex:number) => (
+                                    <div key={'tag'+animation.id + tag.id+tagIndex}>
                                         <p
                                             tabIndex={0}
                                             className="text-sm font-sans font-semibold border border-blue rounded-full py-1 px-3 bg-blue-600 text-white"
