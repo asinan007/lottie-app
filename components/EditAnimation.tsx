@@ -37,7 +37,6 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
     }
 
     const handleBGColorInput = (el: any) => {
-        console.log(el.target.value);
         setState({ ...state, background: el.target.value })
     }
 
@@ -63,11 +62,9 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
             }
         )
             .then(function (response) {
-                console.log('json Response1', response)
                 return response.json();
             })
             .then(function (myJson) {
-                console.log('myjson Response1', myJson);
                 setData(myJson)
             });
     }
@@ -100,8 +97,6 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
             setFile(animation.path);
         }
     }, [animation, jsonData])
-
-    console.log('state.path', state.path);
 
 
     const onSubmit = async (e: SyntheticEvent) => {
@@ -240,80 +235,78 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
                             </div>
                         </div>
 
-                        {/* <div className="text-xs uppercase pb-2 mb-2 mt-6 font-semibold text-gray-500 p-4">
+                        <div className="text-xs uppercase pb-2 mb-2 mt-6 font-semibold text-gray-500 p-4">
                             Assets
                         </div>
                         <div id='assets ml-5'>
                             {state.path?.assets?.map(
                                 (
                                     asset: {
-                                        layers: any[]
-                                    },
-                                    assetIndex: number
+                                        layers: any,
+                                    }, assetIndex: number
                                 ) =>
-                                asset.layers?.map(
-                                    (
-                                        layer: {
-                                            shapes: { it: any[] }[],
-                                            nm: any,
-                                        }, layerIndex: number
-                                    ) =>
-                                    layer.shapes?.map((shape: { it: any[] }, shapeIndex: number) =>
-                                        shape.it?.map(
-                                            (shapeElement, shapeElementIndex) =>
-                                                shapeElement?.c?.k && (
-                                                    <div
-                                                        key={JSON.stringify(shapeElement)}
-                                                        className="flex flex-inline mt-2 ml-2"
-                                                    >
-                                                        <ColorPicker
-                                                            value={handleLayerColorInput(shapeElement, null)}
-                                                            name={JSON.stringify(shapeElement)}
-                                                            onChange={(el: any) => {
-                                                                const value = el.target.value;
-                                                                handleLayerColorInput(shapeElement, value);
-                                                                console.log('color value', value);
-                                                                const currentColor = hexToRGB(value)
-                                                                const currentKData = [...shapeElement.c.k]
-                                                                currentKData[0] = currentColor[0]
-                                                                currentKData[1] = currentColor[1]
-                                                                currentKData[2] = currentColor[2]
+                                    asset.layers?.map((
+                                        layer: { 
+                                            shapes: any,
+                                            nm: any
+                                        },
+                                        layerIndex: number,
+                                    ) => 
+                                        layer.shapes?.map((shape: { it: any[] }, shapeIndex: number) =>
+                                            shape.it?.map(
+                                                (shapeElement, shapeElementIndex) =>
+                                                    shapeElement?.c?.k && (
+                                                        <div
+                                                            key={JSON.stringify(shapeElement)}
+                                                            className="flex flex-inline mt-2 ml-2"
+                                                        >
+                                                            <ColorPicker
+                                                                value={handleLayerColorInput(shapeElement, null)}
+                                                                name={JSON.stringify(shapeElement)}
+                                                                onChange={(el: any) => {
+                                                                    const value = el.target.value;
+                                                                    handleLayerColorInput(shapeElement, value);
+                                                                    const currentColor = hexToRGB(value)
+                                                                    const currentKData = [...shapeElement.c.k]
+                                                                    currentKData[0] = currentColor[0]
+                                                                    currentKData[1] = currentColor[1]
+                                                                    currentKData[2] = currentColor[2]
 
-                                                                const it = [...shape.it]
+                                                                    const it = [...shape.it]
 
-                                                                it[shapeElementIndex] = {
-                                                                    ...shapeElement,
-                                                                    c: {
-                                                                        ...shapeElement.c,
-                                                                        k: currentKData,
-                                                                    },
-                                                                }
+                                                                    it[shapeElementIndex] = {
+                                                                        ...shapeElement,
+                                                                        c: {
+                                                                            ...shapeElement.c,
+                                                                            k: currentKData,
+                                                                        },
+                                                                    }
 
-                                                                const shapes = [...layer.shapes]
-                                                                shapes[shapeIndex] = { ...shape, it }
+                                                                    const shapes = [...layer.shapes]
+                                                                    shapes[shapeIndex] = { ...shape, it }
 
-                                                                const layers = [...state.path.layers]
-                                                                layers[layerIndex] = { ...layer, shapes }
+                                                                    const layers = [...asset.layers]
+                                                                    layers[layerIndex] = { ...layer, shapes }
 
-                                                                const assets = [...state.path.assets]
-                                                                assets[assetIndex] = { ...asset, layers }
+                                                                    const assets = [...state.path.assets]
+                                                                    assets[assetIndex] = { ...asset, layers }
 
-                                                                const updatedAsset = {
-                                                                    ...state,
-                                                                    path: { ...state.path, assets: assets },
-                                                                }
+                                                                    const updatedAsset = {
+                                                                        ...state,
+                                                                        path: { ...state.path, assets: assets },
+                                                                    }
 
-                                                                setState(updatedAsset)
-                                                            }}
-                                                        />
-                                                        <div className="text-xs ml-3 mt-1">{layer.nm}</div>
-                                                    </div>
-                                                )
+                                                                    setState(updatedAsset)
+                                                                }}
+                                                            />
+                                                            <div className="text-xs ml-3 mt-1">{layer.nm}</div>
+                                                        </div>
+                                                    )
+                                            )
                                         )
                                     )
-                                )
                             )}
-                        </div> */}
+                        </div>
 
                         <div className="text-xs uppercase pb-2 mb-2 mt-6 font-semibold text-gray-500 p-4">
                             Layers
@@ -340,7 +333,6 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
                                                             onChange={(el: any) => {
                                                                 const value = el.target.value;
                                                                 handleLayerColorInput(shapeElement, value);
-                                                                console.log('color value', value);
                                                                 const currentColor = hexToRGB(value)
                                                                 const currentKData = [...shapeElement.c.k]
                                                                 currentKData[0] = currentColor[0]
