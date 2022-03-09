@@ -135,7 +135,7 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
         return hexadecimal.length == 1 ? '0' + hexadecimal : hexadecimal
     }
 
-    const RGBToHex = (r, g, b) => {
+    const RGBToHex = (r:any, g:any, b:any) => {
         return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b)
     }
 
