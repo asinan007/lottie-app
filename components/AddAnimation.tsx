@@ -37,11 +37,11 @@ const AddAnimation = ({ setOpen, refetch }: Props) => {
     const [jsonUrl, setJsonUrl] = useState({});
     const { FileInput, openFileDialog, uploadToS3 } = useS3Upload();
   
-    const handleFileChange = async (file:any) => {
-      const { url } = await uploadToS3(file);
-      setJsonUrl(url);
-      console.log(url, jsonUrl);
-    };
+    // const handleFileChange = async (file:any) => {
+    //   const { url } = await uploadToS3(file);
+    //   setJsonUrl(url);
+    //   console.log(url, jsonUrl);
+    // };
 
     const onChange = (e: ChangeEvent<HTMLInputElement & HTMLSelectElement>) => {
         const { name, value } = e.target
