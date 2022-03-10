@@ -26,6 +26,7 @@
     "multer": "^1.4.4",
     "next": "12.1.0",
     "next-connect": "^0.12.2",
+    "next-s3-upload": "^0.1.9",
     "react": "17.0.2",
     "react-color": "^2.19.3",
     "react-color-popover-picker": "^1.0.0",
