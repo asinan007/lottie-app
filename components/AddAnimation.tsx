@@ -34,10 +34,10 @@ const AddAnimation = ({ setOpen, refetch }: Props) => {
         description: '',
     })
 
-    const [jsonUrl, setJsonUrl] = useState();
+    const [jsonUrl, setJsonUrl] = useState({});
     const { FileInput, openFileDialog, uploadToS3 } = useS3Upload();
   
-    const handleFileChange = async file => {
+    const handleFileChange = async (file:any) => {
       const { url } = await uploadToS3(file);
       setJsonUrl(url);
       console.log(url, jsonUrl);
