@@ -11,6 +11,7 @@ import { GET_TAGS } from '../graphql/query/GetTags'
 import axios from 'axios'
 import { useRouter } from 'next/router';
 import { CREATETAG } from '../graphql/mutation/CreateTag';
+import { useS3Upload } from 'next-s3-upload';
 
 interface Props {
     setOpen: () => void,
@@ -33,6 +34,15 @@ const AddAnimation = ({ setOpen, refetch }: Props) => {
         description: '',
     })
 
+    const [jsonUrl, setJsonUrl] = useState();
+    const { FileInput, openFileDialog, uploadToS3 } = useS3Upload();
+  
+    const handleFileChange = async file => {
+      const { url } = await uploadToS3(file);
+      setJsonUrl(url);
+      console.log(url, jsonUrl);
+    };
+
     const onChange = (e: ChangeEvent<HTMLInputElement & HTMLSelectElement>) => {
         const { name, value } = e.target
         setState({ ...state, [name]: value })
@@ -54,6 +64,11 @@ const AddAnimation = ({ setOpen, refetch }: Props) => {
         e.preventDefault()
         if (!tags.length || !acceptedFiles.length) return alert("Tags or file are required")
 
+        const { url } = await uploadToS3(acceptedFiles[0]);
+        setJsonUrl(url);
+        console.log('url', url);
+        console.log('jsonUrl', jsonUrl);
+
         const formatedTags = tags.map((tg: any) => Number(tg.value))
 
         const formData = new FormData()
@@ -62,6 +77,7 @@ const AddAnimation = ({ setOpen, refetch }: Props) => {
         formData.append("title", state.title)
         formData.append("description", state.description)
         formData.append("userId", String(id))
+        formData.append("jsonUrl", url)
 
         formData.append("tags", JSON.stringify(formatedTags))
         console.log('formData', formData)
@@ -69,7 +85,7 @@ const AddAnimation = ({ setOpen, refetch }: Props) => {
             .then(res => {
                 console.log('res', res.data)
                 setTimeout(() => {
-                    // window.location.reload()
+                    window.location.reload()
                 }, 300)
                 alert('Animation added successfully')
                 setOpen()

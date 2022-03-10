@@ -23,12 +23,13 @@ apiRoute.use(uploadMiddleware);
 
 const prisma = new PrismaClient()
 apiRoute.post(async (req: NextApiRequest & { files: any }, res: NextApiResponse) => {
-    const { title, description, tags, userId } = req.body
+    const { title, description, tags, userId, jsonUrl } = req.body
     const formatedTags = JSON.parse(tags)
     console.log('files', req.files)
+    console.log('files', jsonUrl)
 
     try {
-        const prisRes = await prisma.animation.create({ data: { description, title, path: req.files[0].filename, userId: Number(userId) } })
+        const prisRes = await prisma.animation.create({ data: { description, title, path: jsonUrl, userId: Number(userId) } })
         if (prisRes) {
             const arrTag = formatedTags.map((tg: Number) => { return { animationId: prisRes.id, tagId: tg } })
             const addTag = await prisma.tagOnAnimation.createMany({ data: arrTag })
@@ -73,7 +74,7 @@ apiRoute.put(async (req: NextApiRequest & { files: any }, res: NextApiResponse) 
                 const addTag = await prisma.tagOnAnimation.createMany({ data: arrTag })
             }
 
-            fs.writeFile(`./public/uploads/${fileName}`, jsonFileData, err => {
+            fs.writeFile(fileName, jsonFileData, err => {
                 if (err) console.log(err)
             })
         }
@@ -92,7 +93,7 @@ apiRoute.delete(async (req: NextApiRequest, res: NextApiResponse) => {
     try {
         const prisRes = await prisma.animation.delete({ where: { id: Number(id) } })
         if (prisRes) {
-            fs.unlink(`./public/uploads/${prisRes.path}`, err => {
+            fs.unlink(prisRes.path, err => {
                 if (err) console.log(err)
             });
 

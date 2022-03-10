@@ -37,7 +37,7 @@ const AnimationCards = ({ animations }: any) => {
                         <Player
                             autoplay
                             loop
-                            src={`/uploads/${animation?.path}`}
+                            src={animation?.path}
                             style={{ height: '200px', width: '200px' }}
                         >
                             <Controls visible={false} buttons={['play', 'repeat', 'frame', 'debug']} />
