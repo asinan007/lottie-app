@@ -64,12 +64,12 @@ const AddAnimation = ({ setOpen, refetch }: Props) => {
         formData.append("userId", String(id))
 
         formData.append("tags", JSON.stringify(formatedTags))
-
+        console.log('formData', formData)
         axios.post("/api/animation", formData)
             .then(res => {
                 console.log('res', res.data)
                 setTimeout(() => {
-                    window.location.reload()
+                    // window.location.reload()
                 }, 300)
                 alert('Animation added successfully')
                 setOpen()
