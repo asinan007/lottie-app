@@ -45,7 +45,7 @@ apiRoute.post(async (req: NextApiRequest & { files: any }, res: NextApiResponse)
 });
 
 apiRoute.put(async (req: NextApiRequest & { files: any }, res: NextApiResponse) => {
-    const { title, description, tags, animationId, background, jsonData, file } = req.body
+    const { title, description, tags, animationId, background, jsonData, file, path } = req.body
     const formatedTags = JSON.parse(tags)
     const jsonFileData = jsonData
     const fileName = file
@@ -61,7 +61,7 @@ apiRoute.put(async (req: NextApiRequest & { files: any }, res: NextApiResponse) 
             await prisma.animation.update({
                 where: {
                     id: Number(animationId)
-                }, data: { description, title, background }
+                }, data: { description, title, background, path }
             })
         if (prisRes) {
             const arrTag = formatedTags.map((tg: Number) => { return { animationId: prisRes.id, tagId: tg } })

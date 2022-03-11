@@ -12,7 +12,7 @@ import axios from 'axios'
 import { useRouter } from 'next/router';
 import { Player, Controls } from '@lottiefiles/react-lottie-player';
 import ColorPicker from './common/ColorPicker';
-// import {writeJsonFile} from 'write-json-file';
+import { useS3Upload } from 'next-s3-upload';
 
 interface Props {
     setOpen: () => void,
@@ -30,6 +30,9 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
     const id = router?.query?.id
 
     const [state, setState] = useState({} as any)
+    
+    const [jsonUrl, setJsonUrl] = useState({});
+    const { FileInput, openFileDialog, uploadToS3 } = useS3Upload();
 
     const onChange = (e: ChangeEvent<HTMLInputElement & HTMLSelectElement>) => {
         const { name, value } = e.target
@@ -101,21 +104,27 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
 
     const onSubmit = async (e: SyntheticEvent) => {
         e.preventDefault()
-        if (!tags.length || (!acceptedFiles.length && !file)) return alert("Tags or file are required")
+        if (!tags.length) return alert("Tags are required")
 
         const formatedTags = tags.map((tg: any) => Number(tg.value))
 
-        // await writeJsonFile('/uploads/' + animation.path, state.path);
-
+        const newFileName = covertToSlug(state.title)+".json";
         const formData = new FormData()
-        if (acceptedFiles.length)
-            formData.append("file", acceptedFiles[0])
+        var newFile = new File([JSON.stringify(state.path)], newFileName, {
+            type: "text/plain",
+        });
+        console.log(newFile, newFileName);
+        console.log('data', )
+        const { url } = await uploadToS3(newFile);
+        setJsonUrl(url);
+
         formData.append("title", state.title)
         formData.append("description", state.description)
         formData.append("background", state.background)
         formData.append("animationId", animation.id)
         formData.append("jsonData", JSON.stringify(state.path))
         formData.append("file", animation.path)
+        formData.append("path", url)
         formData.append("tags", JSON.stringify(formatedTags))
 
         axios.put("/api/animation", formData)
@@ -128,6 +137,14 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
 
             })
             .catch(err => console.log(err))
+    }
+
+    const covertToSlug = (text: any) => {
+        return text
+            .toLowerCase()
+            .replace(/ /g, '-')
+            .replace(/[^\w-]+/g, '')
+            ;
     }
 
     const componentToHex = (color: any) => {
