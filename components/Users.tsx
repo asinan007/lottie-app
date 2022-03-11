@@ -16,8 +16,7 @@ const Users = () => {
     useEffect(() => {
         getUsers()
     }, [])
-
-    console.log('users', data)
+    
     const users = data?.getUsers
 
     return (
