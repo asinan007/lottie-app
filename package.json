@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.5.10",
+    "@badrap/bar-of-progress": "^0.1.2",
     "@headlessui/react": "^1.5.0",
     "@heroicons/react": "^1.0.6",
     "@lottiefiles/lottie-theming": "^2.0.1",

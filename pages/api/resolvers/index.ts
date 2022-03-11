@@ -90,7 +90,6 @@ export const resolvers = {
             try {
                 const res = await prisma.user.create({ data: { ...args } })
                 if (res) return res
-                console.log(res)
             } catch (error) {
                 if (error instanceof Prisma.PrismaClientKnownRequestError) {
                     // The .code property can be accessed in a type-safe manner

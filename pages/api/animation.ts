@@ -25,8 +25,6 @@ const prisma = new PrismaClient()
 apiRoute.post(async (req: NextApiRequest & { files: any }, res: NextApiResponse) => {
     const { title, description, tags, userId, jsonUrl } = req.body
     const formatedTags = JSON.parse(tags)
-    console.log('files', req.files)
-    console.log('files', jsonUrl)
 
     try {
         const prisRes = await prisma.animation.create({ data: { description, title, path: jsonUrl, userId: Number(userId) } })
@@ -49,7 +47,6 @@ apiRoute.put(async (req: NextApiRequest & { files: any }, res: NextApiResponse) 
     const formatedTags = JSON.parse(tags)
     const jsonFileData = jsonData
     const fileName = file
-    console.log('files', req.files, animationId)
 
     try {
         const prisRes = req.files.length ? await prisma.animation.update({

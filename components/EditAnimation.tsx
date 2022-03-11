@@ -28,6 +28,7 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
     const { acceptedFiles, getRootProps, getInputProps } = useDropzone({ multiple: false, accept: '.json', maxFiles: 1 });
     const router = useRouter()
     const id = router?.query?.id
+    const [disable, setDisable] = React.useState(false);
 
     const [state, setState] = useState({} as any)
     
@@ -105,6 +106,7 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
     const onSubmit = async (e: SyntheticEvent) => {
         e.preventDefault()
         if (!tags.length) return alert("Tags are required")
+        setDisable(true)
 
         const formatedTags = tags.map((tg: any) => Number(tg.value))
 
@@ -113,8 +115,6 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
         var newFile = new File([JSON.stringify(state.path)], newFileName, {
             type: "text/plain",
         });
-        console.log(newFile, newFileName);
-        console.log('data', )
         const { url } = await uploadToS3(newFile);
         setJsonUrl(url);
 
@@ -129,12 +129,12 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
 
         axios.put("/api/animation", formData)
             .then(res => {
-                setTimeout(() => {
-                    window.location.reload()
-                }, 300)
                 alert('Animation updated successfully')
                 setOpen()
 
+            })
+            .then(() => {
+              refreshPage()
             })
             .catch(err => console.log(err))
     }
@@ -165,6 +165,10 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
             return [((c >> 16) & 255) / 255, ((c >> 8) & 255) / 255, (c & 255) / 255]
         }
         return ''
+    }
+
+    const refreshPage = () => {
+      router.replace(router.asPath)
     }
 
     return (
@@ -403,7 +407,7 @@ const EditAnimation = ({ animation, setOpen }: Props) => {
 
                 </div>
 
-                <Button type="submit">Update</Button>
+                <Button type="submit" disabled={disable}>Update</Button>
 
             </form>
         </div>

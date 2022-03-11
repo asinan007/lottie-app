@@ -44,8 +44,6 @@ const ShowAnimations = () => {
 
     }, [search])
 
-    console.log('animations', animations.length, animations);
-
     return (
         <div>
             <div className="flex justify-between items-end mb-7">

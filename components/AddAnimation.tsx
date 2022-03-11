@@ -27,6 +27,7 @@ const AddAnimation = ({ setOpen, refetch }: Props) => {
     const { acceptedFiles, getRootProps, getInputProps } = useDropzone({ multiple: false, accept: '.json', maxFiles: 1 });
     const router = useRouter()
     const id = router?.query?.id
+    const [disable, setDisable] = React.useState(false);
 
     const [state, setState] = useState({
         userId: '',
@@ -57,6 +58,7 @@ const AddAnimation = ({ setOpen, refetch }: Props) => {
     const onSubmit = async (e: SyntheticEvent) => {
         e.preventDefault()
         if (!tags.length || !acceptedFiles.length) return alert("Tags or file are required")
+        setDisable(true)
 
         const { url } = await uploadToS3(acceptedFiles[0]);
         setJsonUrl(url);
@@ -75,24 +77,26 @@ const AddAnimation = ({ setOpen, refetch }: Props) => {
         
         axios.post("/api/animation", formData)
             .then(res => {
-                console.log('res', res.data)
-                setTimeout(() => {
-                    window.location.reload()
-                }, 300)
                 alert('Animation added successfully')
                 setOpen()
-
+            })
+            .then(() => {
+              refreshPage()
             })
             .catch(err => console.log(err))
 
     }
 
     const onCreateTag = async (value: any) => {
-        const res = await createTag({ variables: { name: value } })
+        const res = await createTag({ variables: { name: value.toLowerCase() } })
         return {
             label: res?.data?.createTag?.name,
             value: res?.data?.createTag?.id
         }
+    }
+
+    const refreshPage = () => {
+      router.replace(router.asPath)
     }
 
     return (
@@ -131,8 +135,8 @@ const AddAnimation = ({ setOpen, refetch }: Props) => {
                     <input {...getInputProps()} />
                     <p className="subtitle-clr px-3">Drag 'n' drop file here, or click to select file</p>
                 </div>
-
-                <Button type="submit">Submit</Button>
+                
+                <Button type="submit" disabled={disable}>Add New Animation</Button>
 
             </form>
         </div>

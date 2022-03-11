@@ -30,19 +30,15 @@ const ShowAnimation = () => {
             }
         )
             .then(function (response) {
-                console.log('json Response1', response)
                 return response.json();
             })
             .then(function (myJson) {
-                console.log('myjson Response1', myJson);
                 setData(myJson)
             });
     }
     useEffect(() => {
         getData()
     }, [data])
-
-    console.log('new jsonData', jsonData)
 
     React.useEffect(() => {
         if (data) setAnimation({ ...data?.getAnimation, path: JSON.parse(JSON.stringify(jsonData)) })

@@ -17,7 +17,6 @@ const AnimationCards = ({ animations }: any) => {
 
         axios.delete(`/api/animation?id=${id}`)
             .then(res => {
-                console.log('res', res)
                 window.location.reload()
             })
             .catch(err => console.log(err))
