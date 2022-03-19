@@ -47,5 +47,16 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
+## File Storage
+
+All Lottie Files uploaded will be stored in AWS S3 storage. If you are running this locally make sure the following are in your .env file
+```bash
+S3_UPLOAD_KEY=[s3 key]
+S3_UPLOAD_SECRET=[s3 secret]
+S3_UPLOAD_BUCKET=[s3 bucket name]
+S3_UPLOAD_REGION=[s3 region]
+```
+Also make sure to have a folder with name lottie in the bucket
+
 ## Demo
 [Demo](https://lottie-app.herokuapp.com/)
